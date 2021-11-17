@@ -1,6 +1,7 @@
-from django.shortcuts import render, HttpResponse
+from django.shortcuts import redirect, render, HttpResponse
 
 # Create your views here.
+from products.models import Product
 
 
 def get_users(request):
@@ -18,3 +19,14 @@ def home(request):
         'data': res
     }
     return render(request, 'index.html', context)
+
+
+def product_list(request):
+    products = Product.objects.all()
+    return render(request, 'products-list.html', {'products': products})
+
+
+def delete_product(request, product_id):
+    product = Product.objects.filter(id=product_id)
+    product.delete()
+    return redirect("/products/")

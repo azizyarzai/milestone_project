@@ -25,6 +25,7 @@ def home(request):
 
 def product_list(request):
     products = Product.objects.all()
+    print(products.query)
     print(dir(request))
     print(request.user)
     if request.user.is_authenticated:
@@ -37,3 +38,21 @@ def delete_product(request, product_id):
     product = Product.objects.filter(id=product_id)
     product.delete()
     return redirect("/products/")
+
+
+def create_product(request):
+    if request.method == "POST":
+        name = request.POST.get("name")
+        price = request.POST.get("price")
+        quantity = request.POST.get("quantity")
+        product = Product.objects.create(
+            name=name, price=price, quantity=quantity)
+        product.save()
+        return redirect("/products/")
+
+    return render(request, 'create-product.html')
+
+
+def product_detail(request, product_id):
+    product = Product.objects.get(id=product_id)
+    return render(request, 'product-detail.html', {'product': product})

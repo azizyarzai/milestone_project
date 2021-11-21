@@ -8,11 +8,12 @@
         justify-content: space-evenly;
         align-items: center;
         margin-top: 1rem;
+        flex-wrap: wrap;
       "
     >
-      <h2>{{request.user.username}}</h2>
+      <!-- <h2>{{request.user.username}}</h2> -->
       {% for product in products %}
-      <div class="card" style="width: 18rem">
+      <div class="card" style="min-width: 18rem; margin-top: .5rem; margin-bottom: .5rem;">
         <img src="..." class="card-img-top" alt="..." />
         <div class="card-body">
           <h5 class="card-title">{{product.name}}</h5>

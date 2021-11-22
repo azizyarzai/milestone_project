@@ -1,5 +1,7 @@
-from django.shortcuts import redirect, render, HttpResponse
+from django.http.response import Http404
+from django.shortcuts import get_object_or_404, redirect, render, HttpResponse
 from django.contrib.auth.decorators import login_required
+from django.urls import reverse_lazy
 
 # Create your views here.
 from products.models import Product
@@ -25,9 +27,9 @@ def home(request):
 
 def product_list(request):
     products = Product.objects.all()
-    print(products.query)
-    print(dir(request))
-    print(request.user)
+    # print(products.query)
+    # print(dir(request))
+    # print(request.user)
     if request.user.is_authenticated:
         return render(request, 'products-list.html', {'products': products})
 
@@ -37,10 +39,17 @@ def product_list(request):
 def delete_product(request, product_id):
     product = Product.objects.filter(id=product_id)
     product.delete()
-    return redirect("/products/")
+    print(reverse_lazy('products:list'))
+    return redirect(reverse_lazy('products:list'))
 
 
 def create_product(request):
+    # dic = {
+    #     "name": "Ahamd",
+    #     "age": 25
+    # }
+    # dic["age"]
+    # dic.get("age", )
     if request.method == "POST":
         name = request.POST.get("name")
         price = request.POST.get("price")
@@ -48,11 +57,30 @@ def create_product(request):
         product = Product.objects.create(
             name=name, price=price, quantity=quantity)
         product.save()
-        return redirect("/products/")
+        return redirect(reverse_lazy('products:list'))
 
     return render(request, 'create-product.html')
 
 
 def product_detail(request, product_id):
-    product = Product.objects.get(id=product_id)
+    # try:
+    #     product = Product.objects.get(id=product_id)
+    # except Product.DoesNotExist:
+    #     raise Http404()
+
+    product = get_object_or_404(Product, id=product_id)
     return render(request, 'product-detail.html', {'product': product})
+
+
+def update_product(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    if request.method == 'POST':
+        name = request.POST.get("name")
+        price = request.POST.get("price")
+        quantity = request.POST.get("quantity")
+        product.name = name
+        product.price = price
+        product.quantity = quantity
+        product.save()
+        return redirect(reverse_lazy('products:detail', kwargs={'product_id': product.id}))
+    return render(request, 'update-product.html', {"product": product})

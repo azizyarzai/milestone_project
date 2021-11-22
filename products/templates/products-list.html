@@ -19,8 +19,14 @@
           <h5 class="card-title">{{product.name}}</h5>
           <p class="card-text">{{product.price}}$</p>
           <p class="card-text">{{product.quantity}}$</p>
-          <a href="/products/delete/{{product.id}}/" class="btn btn-danger"
+          <a href="{% url 'products:delete' product.id %}" class="btn btn-danger"
             >Delete</a
+          >
+          <a href="{% url 'products:detail' product.id %}" class="btn btn-success"
+            >See More...</a
+          >
+          <a href="{% url 'products:update' product.id %}" class="btn btn-warning"
+            >Update</a
           >
         </div>
       </div>

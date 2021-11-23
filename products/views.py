@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.http.response import Http404
 from django.shortcuts import get_object_or_404, redirect, render, HttpResponse
 from django.contrib.auth.decorators import login_required
@@ -26,8 +27,10 @@ def home(request):
 
 
 def product_list(request):
-    products = Product.objects.all()
-    # print(products.query)
+    # products = Product.objects.filter(is_availible=True, quantity__gte=28)
+    products = Product.objects.filter(
+        Q(is_availible=True) | Q(quantity__gte=28))
+    print(products.query)
     # print(dir(request))
     # print(request.user)
     if request.user.is_authenticated:

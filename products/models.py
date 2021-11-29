@@ -1,6 +1,18 @@
 from django.db import models
+# from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 # Create your models here.
+
+
+class Distributer(models.Model):
+    name = models.CharField(max_length=150)
+    address = models.CharField(max_length=250)
+
+    class Meta:
+        db_table = 'distributer'
 
 
 class Product(models.Model):
@@ -11,6 +23,9 @@ class Product(models.Model):
     image = models.ImageField(upload_to='products', null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="products")
+    distributers = models.ManyToManyField(Distributer)
 
     def __str__(self):
         return self.name + " - " + str(self.id)
@@ -19,10 +34,3 @@ class Product(models.Model):
         # abstract = True
         db_table = 'product'
         ordering = ['-price', 'created']
-
-
-class Test(models.Model):
-    name = models.CharField(max_length=150)
-
-    class Meta:
-        managed = False

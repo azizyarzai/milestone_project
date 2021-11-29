@@ -72,6 +72,7 @@ def product_detail(request, product_id):
     #     raise Http404()
 
     product = get_object_or_404(Product, id=product_id)
+    print(dir(product.user))
     return render(request, 'product-detail.html', {'product': product})
 
 

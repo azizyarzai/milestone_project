@@ -15,6 +15,13 @@ class Distributer(models.Model):
         db_table = 'distributer'
 
 
+CATEGORIES = (
+    ("COM", "Computer"),
+    ("CAM", "Camera"),
+    ("PHN", "Phone"),
+)
+
+
 class Product(models.Model):
     name = models.CharField(max_length=100, default="Test Product")
     price = models.FloatField()
@@ -26,6 +33,7 @@ class Product(models.Model):
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="products")
     distributers = models.ManyToManyField(Distributer)
+    category = models.CharField(max_length=250, choices=CATEGORIES)
 
     def __str__(self):
         return self.name + " - " + str(self.id)

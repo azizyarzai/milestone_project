@@ -23,7 +23,7 @@ def home(request):
     context = {
         'data': res
     }
-    return render(request, 'index.html', context)
+    return render(request, 'products/index.html', context)
 
 
 def product_list(request):
@@ -34,7 +34,7 @@ def product_list(request):
     # print(dir(request))
     # print(request.user)
     if request.user.is_authenticated:
-        return render(request, 'products-list.html', {'products': products})
+        return render(request, 'products/products-list.html', {'products': products})
 
     return redirect('/admin/login/')
 
@@ -62,7 +62,7 @@ def create_product(request):
         product.save()
         return redirect(reverse_lazy('products:list'))
 
-    return render(request, 'create-product.html')
+    return render(request, 'products/create-product.html')
 
 
 def product_detail(request, product_id):
@@ -73,7 +73,7 @@ def product_detail(request, product_id):
 
     product = get_object_or_404(Product, id=product_id)
     print(dir(product.user))
-    return render(request, 'product-detail.html', {'product': product})
+    return render(request, 'products/product-detail.html', {'product': product})
 
 
 def update_product(request, product_id):
@@ -87,4 +87,4 @@ def update_product(request, product_id):
         product.quantity = quantity
         product.save()
         return redirect(reverse_lazy('products:detail', kwargs={'product_id': product.id}))
-    return render(request, 'update-product.html', {"product": product})
+    return render(request, 'products/update-product.html', {"product": product})

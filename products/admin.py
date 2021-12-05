@@ -10,6 +10,10 @@ class ProductAdmin(admin.ModelAdmin):
     list_filter = ['created', 'price']
     list_per_page = 5
     search_fields = ['name', 'price']
+    exclude = ['slug']
+
+    class Meta:
+        readonly_fields = ['slug']
 
 
 admin.site.register(Product, ProductAdmin)

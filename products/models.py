@@ -4,6 +4,7 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.utils.text import slugify
 from django.db.models.signals import pre_save, post_save
+from django.utils.timesince import timesince
 
 User = get_user_model()
 
@@ -39,7 +40,7 @@ class Product(models.Model):
                             check_for_phone], error_messages={
                                 'unique': 'the value is not unique',
                                 'blank': 'please enter the name'
-    })
+    }, help_text="Please enter a unique name!")
     slug = models.SlugField(unique=True)
     price = models.FloatField()
     quantity = models.IntegerField(null=True, blank=True)
@@ -51,6 +52,10 @@ class Product(models.Model):
         User, on_delete=models.CASCADE, related_name="products")
     distributers = models.ManyToManyField(Distributer)
     category = models.CharField(max_length=250, choices=CATEGORIES)
+
+    @property
+    def added_on(self):
+        return timesince(self.created) + " ago"
 
     def __str__(self):
         return self.name + " - " + str(self.id)

@@ -5,12 +5,18 @@ from products.models import Product, Distributer
 
 
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ['id', 'name', 'price', 'quantity', 'created', 'updated']
+    list_display = ['id', 'name', 'price',
+                    'quantity', 'created', 'updated', 'added_on']
     list_display_links = ['id', 'name']
     list_filter = ['created', 'price']
     list_per_page = 5
     search_fields = ['name', 'price']
-    exclude = ['slug']
+    # exclude = ['slug']
+    fields = ['name', 'price',
+              'quantity', 'user', 'distributers',
+              'category', 'is_availible', 'image', 'created', 'updated', 'added_on']
+
+    readonly_fields = ['created', 'updated', 'added_on']
 
     class Meta:
         readonly_fields = ['slug']

@@ -1,3 +1,5 @@
+from products.forms import ProductModelForm
+from products.forms import StudentForm
 from django.db.models import Q
 from django.http.response import Http404
 from django.shortcuts import get_object_or_404, redirect, render, HttpResponse
@@ -88,3 +90,20 @@ def update_product(request, product_id):
         product.save()
         return redirect(reverse_lazy('products:detail', kwargs={'product_id': product.id}))
     return render(request, 'products/update-product.html', {"product": product})
+
+
+def generate_form(request):
+    student_form = StudentForm(request.POST or None)
+    if request.method == "POST" and student_form.is_valid():
+        print(student_form.cleaned_data.get('roll_no'))
+        return HttpResponse("Valid data")
+
+    return render(request, 'products/form.html', {'form': student_form})
+
+
+def create_product_form(request):
+    product_form = ProductModelForm(initial={'name': "Amin"})
+    if request.method == "POST" and product_form.is_valid():
+        print(product_form.cleaned_data)
+        product_form.save()
+    return render(request, 'products/create-product-form.html', {'form': product_form})

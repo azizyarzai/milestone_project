@@ -1,3 +1,4 @@
+from django.views.generic.base import View
 from products.forms import ProductModelForm
 from products.forms import StudentForm
 from django.db.models import Q
@@ -28,6 +29,19 @@ def home(request):
     return render(request, 'products/index.html', context)
 
 
+class ProductList(View):
+    def get(self, request):
+        products = Product.objects.filter(
+            Q(is_availible=True) | Q(quantity__gte=28))
+        print(products.query)
+        # print(dir(request))
+        # print(request.user)
+        if request.user.is_authenticated:
+            return render(request, 'products/products-list.html', {'products': products})
+
+        return redirect('/admin/login/')
+
+
 def product_list(request):
     # products = Product.objects.filter(is_availible=True, quantity__gte=28)
     products = Product.objects.filter(
@@ -46,6 +60,19 @@ def delete_product(request, product_id):
     product.delete()
     print(reverse_lazy('products:list'))
     return redirect(reverse_lazy('products:list'))
+
+
+class CreateProduct(View):
+    def get(self, request):
+        product_form = ProductModelForm(initial={'name': "Amin"})
+        return render(request, 'products/create-product-form.html', {'form': product_form})
+
+    def post(self, request):
+        product_form = ProductModelForm(request.POST)
+        if product_form.is_valid():
+            print(product_form.cleaned_data)
+            product_form.save()
+        return render(request, 'products/create-product-form.html', {'form': product_form})
 
 
 def create_product(request):

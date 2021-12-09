@@ -35,6 +35,11 @@ def check_for_phone(value):
     raise ValidationError("Name should contain phone.")
 
 
+class ProductModelManager(models.Manager):
+    def get_available_products(self):
+        return super().all().filter(is_availible=True)
+
+
 class Product(models.Model):
     name = models.CharField(max_length=20, validators=[
                             check_for_phone], error_messages={
@@ -52,6 +57,8 @@ class Product(models.Model):
         User, on_delete=models.CASCADE, related_name="products")
     distributers = models.ManyToManyField(Distributer)
     category = models.CharField(max_length=250, choices=CATEGORIES)
+
+    # test_manager = ProductModelManager()
 
     @property
     def added_on(self):

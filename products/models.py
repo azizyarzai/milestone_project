@@ -5,6 +5,7 @@ from django.core.exceptions import ValidationError
 from django.utils.text import slugify
 from django.db.models.signals import pre_save, post_save
 from django.utils.timesince import timesince
+from django.urls import reverse_lazy
 
 User = get_user_model()
 
@@ -70,6 +71,9 @@ class Product(models.Model):
     def save(self):
         self.slug = slugify(self.name)
         return super().save()
+
+    def get_absolute_url(self):
+        return reverse_lazy("products:detail", kwargs={"product_id": self.id})
 
     class Meta:
         # abstract = True

@@ -1,14 +1,33 @@
+from django.contrib import messages
 from django.views.generic.base import View
 from products.forms import ProductModelForm
 from products.forms import StudentForm
 from django.db.models import Q
-from django.http.response import Http404
+from django.http.response import Http404, HttpResponseNotAllowed
 from django.shortcuts import get_object_or_404, redirect, render, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
+from django.views.generic.base import TemplateView
+from django.views.generic.list import ListView
+from django.views.generic.edit import CreateView, UpdateView
 
 # Create your views here.
-from products.models import Product
+from products.models import Product, Distributer
+
+
+class ProductUpdateView(UpdateView):
+    model = Product
+    fields = ['name', 'price', 'quantity', 'is_availible',
+              'image', 'user', 'distributers', 'category']
+    template_name = 'products/form.html'
+
+    # def get_queryset(self):
+    #     print("id:", self.kwargs.get("product_id"))
+    #     return Product.objects.get(id=self.kwargs.get("product_id"))
+
+
+class AboutView(TemplateView):
+    template_name = 'about.html'
 
 
 def get_users(request):
@@ -27,6 +46,19 @@ def home(request):
         'data': res
     }
     return render(request, 'products/index.html', context)
+
+
+class ProductListView(ListView):
+    model = Product
+    template_name = 'products/products-list.html'
+    context_object_name = 'products'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # context = {}
+        no_product = Product.objects.all().count()
+        context['no_product'] = no_product
+        return context
 
 
 class ProductList(View):
@@ -56,10 +88,25 @@ def product_list(request):
 
 
 def delete_product(request, product_id):
-    product = Product.objects.filter(id=product_id)
-    product.delete()
+    try:
+        product = Product.objects.get(id=product_id)
+        product.delete()
+        messages.success(request, "Product Deleted Successfuly.")
+        messages.error(request, "Something  went wrong.")
+    except Product.DoesNotExist:
+        raise Http404()
+    except Product.MultipleObjectsReturned:
+        return HttpResponse("More than object returned.")
+
     print(reverse_lazy('products:list'))
     return redirect(reverse_lazy('products:list'))
+
+
+class CreateProductView(CreateView):
+    model = Product
+    template_name = 'products/create-product-form.html'
+    fields = ['name', 'price', 'quantity', 'is_availible',
+              'image', 'user', 'distributers', 'category']
 
 
 class CreateProduct(View):

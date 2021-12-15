@@ -1,37 +1,65 @@
-{% extends 'base.html' %}
-{% block content %}
+{% extends 'base.html' %} 
+{% block style %}
+<style>
+  .red {
+    background-color: red;
+  }
 
-    <div
-      class="container"
-      style="
-        display: flex;
-        justify-content: space-evenly;
-        align-items: center;
-        margin-top: 1rem;
-        flex-wrap: wrap;
-      "
-    >
-      <!-- <h2>{{request.user.username}}</h2> -->
-      {% for product in products %}
-      <div class="card" style="min-width: 18rem; margin-top: .5rem; margin-bottom: .5rem;">
-        <img src="..." class="card-img-top" alt="..." />
-        <div class="card-body">
-          <h5 class="card-title">{{product.name}}</h5>
-          <p class="card-text">{{product.price}}$</p>
-          <p class="card-text">{{product.quantity}}</p>
-          <p class="card-text">{{product.category}}</p>
-          <a href="{% url 'products:delete' product.id %}" class="btn btn-danger"
-            >Delete</a
-          >
-          <a href="{% url 'products:detail' product.id %}" class="btn btn-success"
-            >See More...</a
-          >
-          <a href="{% url 'products:update' product.id %}" class="btn btn-warning"
-            >Update</a
-          >
-        </div>
-      </div>
-      {% endfor %}
+  .blue {
+    background-color: blue;
+  }
+  .green {
+    background-color: green;
+  }
+</style>
+{% endblock style %} 
+{% block content %} 
+{% include 'partials/_navbar.html' with nav_value='List' %}
+<div
+  class="container"
+  style="
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+  "
+>
+  <h2>{{no_product}}</h2>
+  {% for product in products %}
+  <div
+    class="card"
+    style="min-width: 18rem; margin-top: 0.5rem; margin-bottom: 0.5rem"
+  >
+    {% if product.image %}
+    <img
+      src="{{product.image.url}}"
+      class="card-img-top"
+      alt="..."
+      height="100px"
+      width="100px"
+    />
+    {% endif %}
+    <div class="card-body">
+      <h5 class="card-title {% cycle 'red' 'blue' 'green' %}">
+        {{product.name | title }}
+      </h5>
+      <p class="card-text">{{product.price|add:"10"}}$</p>
+      <p class="card-text">{{product.quantity}}</p>
+      <p class="card-text">{{product.category}}</p>
+      <p class="card-text">{{product.created|date:'Y - l - e'}}</p>
+      <a href="{% url 'products:delete' product.id %}" class="btn btn-danger"
+        >Delete</a
+      >
+      <a href="{% url 'products:detail' product.id %}" class="btn btn-success"
+        >See More...</a
+      >
+      <a href="{% url 'products:update' product.id %}" class="btn btn-warning"
+        >Update</a
+      >
     </div>
+  </div>
+  {% endfor %}
+</div>
 
-    {% endblock content %}
+{% endblock content %}

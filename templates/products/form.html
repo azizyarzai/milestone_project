@@ -1,13 +1,12 @@
-{% extends 'base.html' %} 
-{% block content %}
+{% extends 'base.html' %} {% block content %}
 <h3>Welcome to django forms</h3>
-<form action="/products/forms/" method="post">
-    {% csrf_token %}
-    <table>
-        {{form.as_table}}
-    </table>
-    <input type="submit" value="Submit">
-    <!-- {{form.name.label}}
+<form method="post">
+  {% csrf_token %}
+  <table>
+    {{form.as_table}}
+  </table>
+  <input type="submit" value="Submit" />
+  <!-- {{form.name.label}}
     {{form.name}} -->
 </form>
 {% endblock content %}

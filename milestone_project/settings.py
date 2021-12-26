@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'products',
+    'accounts'
 ]
 
 MIDDLEWARE = [
@@ -81,7 +82,7 @@ WSGI_APPLICATION = 'milestone_project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'milestone_project',
+        'NAME': 'hi123',
         "HOST": 'localhost',
         "USER": 'postgres',
         "PASSWORD": 'postgres',
@@ -147,3 +148,6 @@ LOGIN_URL = '/admin/login/'
 MEDIA_URL = '/media/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+AUTH_USER_MODEL = 'accounts.Account'

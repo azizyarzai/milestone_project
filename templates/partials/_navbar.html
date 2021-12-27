@@ -29,10 +29,16 @@
         </li>
       </ul>
       <ul>
+        {% if user.is_authenticated %}
+
+        <span>Welcome {{user.email}}</span>
+        <a href="{% url 'accounts:logout' %}" class="btn btn-danger">Logout</a>
+        {% else %}
         <a href="{% url 'accounts:login' %}" class="btn btn-success">Login</a>
         <a href="{% url 'accounts:register' %}" class="btn btn-warning"
           >Register</a
         >
+        {% endif %}
       </ul>
     </div>
   </div>

@@ -68,9 +68,9 @@ class Product(models.Model):
     def __str__(self):
         return self.name + " - " + str(self.id)
 
-    def save(self):
+    def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
-        return super().save()
+        return super().save(*args, **kwargs)
 
     def get_absolute_url(self):
         return reverse_lazy("products:detail", kwargs={"product_id": self.id})

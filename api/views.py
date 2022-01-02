@@ -2,13 +2,14 @@ from django.http.response import HttpResponse, JsonResponse
 from django.shortcuts import render
 from rest_framework import serializers
 from rest_framework.response import Response
-from rest_framework.decorators import api_view, APIView
+from rest_framework.decorators import api_view, APIView, permission_classes
 
 from products.models import Product
 
 from .serializers import ProductSerilizer, TestSerializer
 
 from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 
 # APIView == View
 
@@ -36,6 +37,7 @@ class SayHiApiView(APIView):
 
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticatedOrReadOnly])
 def list_products(request):
     products = Product.objects.all()
     serializer = ProductSerilizer(products, many=True)
@@ -43,5 +45,11 @@ def list_products(request):
 
 
 class ProductViewSet(viewsets.ModelViewSet):
-    queryset = Product.objects.all()
+    # queryset = Product.objects.all()
+    # queryset = Product.objects.filter(is_availible=True)
     serializer_class = ProductSerilizer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def get_queryset(self):
+
+        return Product.objects.filter(is_availible=True)

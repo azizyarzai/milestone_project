@@ -8,7 +8,7 @@ from django.utils.timesince import timesince
 
 
 class AccountModelManager(BaseUserManager):
-    def create_user(self, email, name, gender, date_of_birth, password=None):
+    def create_user(self, email, name, gender, password=None):
         """
         Creates and saves a User with the given email, date of
         birth and password.
@@ -20,7 +20,6 @@ class AccountModelManager(BaseUserManager):
             email=self.normalize_email(email),
             name=name,
             gender=gender,
-            date_of_birth=date_of_birth
         )
 
         user.set_password(password)
